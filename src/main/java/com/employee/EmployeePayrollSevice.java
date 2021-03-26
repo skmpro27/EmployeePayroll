@@ -37,4 +37,15 @@ class EmployeePayrollService {
         con.connection.close();
         return resultSet;
     }
+
+    public int updateTableBasicPay(int basicPay, String name) throws SQLException, ClassNotFoundException {
+        connect();
+        PreparedStatement preparedStatement = con.connection.prepareStatement("UPDATE employee_payroll SET Basic_Pay = ? WHERE Name = ?");
+        preparedStatement.setInt(1, basicPay);
+        preparedStatement.setString(2, name);
+
+        int resultSet = preparedStatement.executeUpdate();
+        con.connection.close();
+        return resultSet;
+    }
 }

@@ -43,4 +43,14 @@ public class EmployeePayrollTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void givenDatabaseUpdateDataInTableUsingPreparedStatement() {
+        try {
+            int result = employeePayroll.updateTableBasicPay(2000000, "Manju");
+            Assert.assertEquals(1, result);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
