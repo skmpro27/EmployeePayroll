@@ -1,5 +1,6 @@
 package com.employee;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -25,5 +26,15 @@ class EmployeePayrollService {
         }
         con.connection.close();
         return count;
+    }
+
+    public int updateTable() throws SQLException, ClassNotFoundException {
+        connect();
+        Statement statement = con.connection.createStatement();
+        int resultSet = statement.executeUpdate( "UPDATE employee_payroll " +
+                                                        "SET Basic_Pay = 3000000 " +
+                                                        "WHERE Name = 'Yashi'");
+        con.connection.close();
+        return resultSet;
     }
 }
