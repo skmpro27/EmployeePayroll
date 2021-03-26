@@ -28,16 +28,6 @@ class EmployeePayrollService {
         return count;
     }
 
-    public int updateTable() throws SQLException, ClassNotFoundException {
-        connect();
-        Statement statement = con.connection.createStatement();
-        int resultSet = statement.executeUpdate( "UPDATE employee_payroll " +
-                                                        "SET Basic_Pay = 3000000 " +
-                                                        "WHERE Name = 'Yashi'");
-        con.connection.close();
-        return resultSet;
-    }
-
     public int updateTableBasicPay(int basicPay, String name) throws SQLException, ClassNotFoundException {
         connect();
         PreparedStatement preparedStatement = con.connection.prepareStatement("UPDATE employee_payroll SET Basic_Pay = ? WHERE Name = ?");
@@ -47,5 +37,19 @@ class EmployeePayrollService {
         int resultSet = preparedStatement.executeUpdate();
         con.connection.close();
         return resultSet;
+    }
+
+    public int retrieveByName(String name) throws SQLException, ClassNotFoundException {
+        connect();
+        int basicPay = 0;
+        PreparedStatement preparedStatement = con.connection.prepareStatement("SELECT * FROM employee_payroll WHERE Name = ?");
+        preparedStatement.setString(1, name);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            basicPay = resultSet.getInt(8);
+        }
+        con.connection.close();
+        return basicPay;
     }
 }

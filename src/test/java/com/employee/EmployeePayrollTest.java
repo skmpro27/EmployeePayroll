@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class EmployeePayrollTest {
@@ -35,9 +36,9 @@ public class EmployeePayrollTest {
     }
 
     @Test
-    public void givenDatabaseUpdateDataInTable() {
+    public void givenDatabaseUpdateDataInTableUsingPreparedStatement() {
         try {
-            int result = employeePayroll.updateTable();
+            int result = employeePayroll.updateTableBasicPay(2000000, "Manju");
             Assert.assertEquals(1, result);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
@@ -45,10 +46,10 @@ public class EmployeePayrollTest {
     }
 
     @Test
-    public void givenDatabaseUpdateDataInTableUsingPreparedStatement() {
+    public void givenDatabaseRetrieveDataByNameUsingPreparedStatement() {
         try {
-            int result = employeePayroll.updateTableBasicPay(2000000, "Manju");
-            Assert.assertEquals(1, result);
+            int result = employeePayroll.retrieveByName("Manju");
+            Assert.assertEquals(2000000, result);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
