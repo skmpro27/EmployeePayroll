@@ -65,4 +65,24 @@ public class EmployeePayrollTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void givenDatabaseGroupByGenderReturnSum() {
+        try {
+            int result = employeePayroll.sumGroupBy("M","Gender");
+            Assert.assertEquals(900000, result);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenDatabaseGroupByGenderReturnAverage() {
+        try {
+            int result = employeePayroll.averageGroupBy("M","Gender");
+            Assert.assertEquals(450000, result);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
