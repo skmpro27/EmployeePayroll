@@ -95,4 +95,39 @@ class EmployeePayrollService {
         String sql = "SELECT AVG(Basic_Pay) FROM employee_payroll WHERE gender = ? GROUP BY ?";
         return groupByToPerformOperations(sql, field, column);
     }
+
+    public int addNewEmployee (String name, String gender, String address, long phone, Date date, double salary) throws SQLException, ClassNotFoundException {
+        connect();
+        int result = 0;
+        con.connection.setAutoCommit(false);
+        try {
+            PreparedStatement preparedStatement = con.connection.prepareStatement(
+                    "INSERT INTO payroll ( Salary, Deductions, Taxable_Pay, Income_Tax, Net_Pay ) " +
+                            "VALUES ( ?, ?, ?, ?, ? );");
+            preparedStatement.setDouble(1, salary);
+            preparedStatement.setDouble(2, salary);
+            preparedStatement.setDouble(3, salary);
+            preparedStatement.setDouble(4, salary);
+            preparedStatement.setDouble(5, salary);
+            result += preparedStatement.executeUpdate();
+
+            PreparedStatement preparedStatement2 = con.connection.prepareStatement(
+                    "INSERT INTO employee_payroll ( Name, Gender, Address, Phone, Start, Salary) " +
+                            "VALUES ( ?, ?, ?, ?, ?, ? );");
+            preparedStatement2.setString(1, name);
+            preparedStatement2.setString(2, gender);
+            preparedStatement2.setString(3, address);
+            preparedStatement2.setLong(4, phone);
+            preparedStatement2.setDate(5, date);
+            preparedStatement2.setDouble(6, salary);
+            result += preparedStatement2.executeUpdate();
+            con.connection.commit();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            con.connection.rollback();
+        }
+        con.connection.close();
+        return result;
+    }
 }
