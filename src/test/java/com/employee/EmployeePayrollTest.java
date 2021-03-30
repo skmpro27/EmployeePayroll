@@ -49,7 +49,7 @@ public class EmployeePayrollTest {
     @Test
     public void givenDatabaseRetrieveDataByNameUsingPreparedStatement() {
         try {
-            int result = employeePayroll.retrieveByName("Manju");
+            int result = employeePayroll.retrieveByName("Manju", 7);
             Assert.assertEquals(2000000, result);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
@@ -60,7 +60,7 @@ public class EmployeePayrollTest {
     public void givenDatabaseRetrieveDataInRangeOfDate() {
         try {
             int result = employeePayroll.dataInRange(Date.valueOf("2019-01-01"), Date.valueOf("2020-11-01"));
-            Assert.assertEquals(1, result);
+            Assert.assertEquals(2, result);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -70,7 +70,7 @@ public class EmployeePayrollTest {
     public void givenDatabaseGroupByGenderReturnSum() {
         try {
             int result = employeePayroll.sumGroupBy("M","Gender");
-            Assert.assertEquals(900000, result);
+            Assert.assertEquals(2000000, result);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -80,7 +80,7 @@ public class EmployeePayrollTest {
     public void givenDatabaseGroupByGenderReturnAverage() {
         try {
             int result = employeePayroll.averageGroupBy("M","Gender");
-            Assert.assertEquals(450000, result);
+            Assert.assertEquals(1000000, result);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }

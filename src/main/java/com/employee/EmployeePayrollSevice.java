@@ -1,7 +1,5 @@
 package com.employee;
 
-import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
-
 import java.sql.*;
 
 class EmployeePayrollService {
@@ -38,7 +36,7 @@ class EmployeePayrollService {
 
     public int updateTableBasicPay(int basicPay, String name) throws SQLException, ClassNotFoundException {
         connect();
-        PreparedStatement preparedStatement = con.connection.prepareStatement("UPDATE employee_payroll SET Basic_Pay = ? WHERE Name = ?");
+        PreparedStatement preparedStatement = con.connection.prepareStatement("UPDATE employee_payroll SET Salary = ? WHERE Name = ?");
         preparedStatement.setInt(1, basicPay);
         preparedStatement.setString(2, name);
 
@@ -47,7 +45,7 @@ class EmployeePayrollService {
         return resultSet;
     }
 
-    public int retrieveByName(String name) throws SQLException, ClassNotFoundException {
+    public int retrieveByName(String name, int columnIdx) throws SQLException, ClassNotFoundException {
         connect();
         int basicPay = 0;
         PreparedStatement preparedStatement = con.connection.prepareStatement("SELECT * FROM employee_payroll WHERE Name = ?");
@@ -55,7 +53,7 @@ class EmployeePayrollService {
 
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
-            basicPay = resultSet.getInt(8);
+            basicPay = resultSet.getInt(columnIdx);
         }
         con.connection.close();
         return basicPay;
@@ -89,12 +87,12 @@ class EmployeePayrollService {
     }
 
     public int sumGroupBy(String field, String column) throws SQLException, ClassNotFoundException {
-        String sql = "SELECT SUM(Basic_Pay) FROM employee_payroll WHERE gender = ? GROUP BY ?";
+        String sql = "SELECT SUM(Salary) FROM employee_payroll WHERE gender = ? GROUP BY ?";
         return groupByToPerformOperations(sql, field, column);
     }
 
     public int averageGroupBy(String field, String column) throws SQLException, ClassNotFoundException {
-        String sql = "SELECT AVG(Basic_Pay) FROM employee_payroll WHERE gender = ? GROUP BY ?";
+        String sql = "SELECT AVG(Salary) FROM employee_payroll WHERE gender = ? GROUP BY ?";
         return groupByToPerformOperations(sql, field, column);
     }
 
