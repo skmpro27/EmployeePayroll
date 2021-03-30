@@ -27,9 +27,9 @@ class EmployeePayrollService {
                     "   Name: " + resultSet.getString(2) +
                     "   Gender: " + resultSet.getString(3) +
                     "   Address: " + resultSet.getString(4) +
-                    "   Department: " + resultSet.getString(5) +
-                    "   Phone: " + resultSet.getLong(6) +
-                    "   Start: " + resultSet.getString(7));
+                    "   Phone: " + resultSet.getLong(5) +
+                    "   Start: " + resultSet.getString(6) +
+                    "   Salary: " + resultSet.getInt(7));
         }
         return count;
     }
