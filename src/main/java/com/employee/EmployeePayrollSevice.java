@@ -1,5 +1,7 @@
 package com.employee;
 
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
+
 import java.sql.*;
 
 class EmployeePayrollService {
@@ -101,15 +103,19 @@ class EmployeePayrollService {
         int result = 0;
         con.connection.setAutoCommit(false);
         try {
-            PreparedStatement preparedStatement = con.connection.prepareStatement(
-                    "INSERT INTO payroll ( Salary, Deductions, Taxable_Pay, Income_Tax, Net_Pay ) " +
-                            "VALUES ( ?, ?, ?, ?, ? );");
-            preparedStatement.setDouble(1, salary);
-            preparedStatement.setDouble(2, salary);
-            preparedStatement.setDouble(3, salary);
-            preparedStatement.setDouble(4, salary);
-            preparedStatement.setDouble(5, salary);
-            result += preparedStatement.executeUpdate();
+            try {
+                PreparedStatement preparedStatement = con.connection.prepareStatement(
+                        "INSERT INTO payroll ( Salary, Deductions, Taxable_Pay, Income_Tax, Net_Pay ) " +
+                                "VALUES ( ?, ?, ?, ?, ? );");
+                preparedStatement.setDouble(1, salary);
+                preparedStatement.setDouble(2, salary * 0.20);
+                preparedStatement.setDouble(3, salary - salary * 0.20);
+                preparedStatement.setDouble(4, (salary - salary * 0.20) * 0.1);
+                preparedStatement.setDouble(5, salary - (salary - salary * 0.20) * 0.1);
+                result += preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println("work on Already existing salary");
+            }
 
             PreparedStatement preparedStatement2 = con.connection.prepareStatement(
                     "INSERT INTO employee_payroll ( Name, Gender, Address, Phone, Start, Salary) " +
