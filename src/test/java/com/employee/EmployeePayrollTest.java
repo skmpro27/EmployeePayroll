@@ -7,6 +7,8 @@ import org.junit.Test;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeePayrollTest {
     EmployeePayrollService employeePayroll;
@@ -47,16 +49,6 @@ public class EmployeePayrollTest {
     }
 
     @Test
-    public void givenDatabaseRetrieveDataByNameUsingPreparedStatement() {
-        try {
-            int result = employeePayroll.retrieveByName("Manju", 7);
-            Assert.assertEquals(2000000, result);
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
     public void givenDatabaseRetrieveDataInRangeOfDate() {
         try {
             int result = employeePayroll.dataInRange(Date.valueOf("2019-01-01"), Date.valueOf("2020-11-01"));
@@ -89,11 +81,15 @@ public class EmployeePayrollTest {
     @Test
     public void addNewEmployeeToNewPayroll() {
         try {
+            List<String> department  = new ArrayList<>();
+            department.add("HR");
+            department.add("IT");
             int result = employeePayroll.addNewEmployee("Shubha", "F", "Bhopal",
-                    78696278, Date.valueOf("2020-02-01"), 4000000);
+                    78696278, Date.valueOf("2020-02-01"), 4000000, department);
             Assert.assertEquals(2, result);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
+
 }

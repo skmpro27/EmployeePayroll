@@ -1,6 +1,7 @@
 package com.employee;
 
 import java.sql.*;
+import java.util.List;
 
 class EmployeePayrollService {
     DatabaseConnection con = new DatabaseConnection();
@@ -45,18 +46,19 @@ class EmployeePayrollService {
         return resultSet;
     }
 
-    public int retrieveByName(String name, int columnIdx) throws SQLException, ClassNotFoundException {
-        connect();
-        int basicPay = 0;
-        PreparedStatement preparedStatement = con.connection.prepareStatement("SELECT * FROM employee_payroll WHERE Name = ?");
+    public int retrieveByName(String sql, String name, int columnIdx) throws SQLException, ClassNotFoundException {
+        if (con.connection == null)
+            connect();
+        int value = 0;
+        PreparedStatement preparedStatement = con.connection.prepareStatement(sql);
         preparedStatement.setString(1, name);
 
         ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
-            basicPay = resultSet.getInt(columnIdx);
+            value = resultSet.getInt(columnIdx);
         }
-        con.connection.close();
-        return basicPay;
+        //con.connection.close();
+        return value;
     }
 
     public int dataInRange(Date start, Date end) throws SQLException, ClassNotFoundException {
@@ -96,7 +98,7 @@ class EmployeePayrollService {
         return groupByToPerformOperations(sql, field, column);
     }
 
-    public int addNewEmployee (String name, String gender, String address, long phone, Date date, double salary) throws SQLException, ClassNotFoundException {
+    public int addNewEmployee (String name, String gender, String address, long phone, Date date, double salary, List<String> department) throws SQLException, ClassNotFoundException {
         connect();
         int result = 0;
         con.connection.setAutoCommit(false);
@@ -112,7 +114,7 @@ class EmployeePayrollService {
                 preparedStatement.setDouble(5, salary - (salary - salary * 0.20) * 0.1);
                 result += preparedStatement.executeUpdate();
             } catch (SQLException e) {
-                System.out.println("work on Already existing salary");
+                System.out.println("work on already existing salary");
             }
 
             PreparedStatement preparedStatement2 = con.connection.prepareStatement(
@@ -125,6 +127,9 @@ class EmployeePayrollService {
             preparedStatement2.setDate(5, date);
             preparedStatement2.setDouble(6, salary);
             result += preparedStatement2.executeUpdate();
+
+            int id = retrieveByName("SELECT * FROM employee_payroll WHERE Name = ?", name, 1);
+            addDepartment(id, department);
             con.connection.commit();
 
         } catch (Exception e) {
@@ -133,5 +138,27 @@ class EmployeePayrollService {
         }
         con.connection.close();
         return result;
+    }
+
+    public void addDepartment(int id, List<String> department) throws SQLException, ClassNotFoundException {
+        String sql = "SELECT * FROM departments WHERE Department = ?";
+        for (String dpt: department) {
+            try {
+                PreparedStatement preparedStatementForDepartment = con.connection.prepareStatement(
+                        "INSERT INTO departments ( Department ) " +
+                                "VALUES ( ? )");
+                preparedStatementForDepartment.setString(1, dpt);
+            } catch (SQLException e) {
+                System.out.println("added in existing department");
+            }
+
+            int Department_Id = retrieveByName(sql, dpt,1);
+            PreparedStatement preparedStatementForDpt_Emp = con.connection.prepareStatement(
+                    "INSERT INTO contact_departments ( Id, Department_Id ) " +
+                            "VALUES ( ?, ? )");
+            preparedStatementForDpt_Emp.setInt(1, id);
+            preparedStatementForDpt_Emp.setInt(2, Department_Id);
+            preparedStatementForDpt_Emp.executeUpdate();
+        }
     }
 }
